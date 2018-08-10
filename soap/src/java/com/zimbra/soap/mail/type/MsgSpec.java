@@ -33,7 +33,13 @@ import com.zimbra.soap.type.AttributeName;
 import com.zimbra.soap.type.MsgContent;
 import com.zimbra.soap.type.ZmBoolean;
 
+import io.leangen.graphql.annotations.GraphQLInputField;
+import io.leangen.graphql.annotations.GraphQLNonNull;
+import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.annotations.types.GraphQLType;
+
 @XmlAccessorType(XmlAccessType.NONE)
+@GraphQLType(name="MsgSpec", description="Message Specifications.")
 public class MsgSpec {
 
     /**
@@ -42,6 +48,8 @@ public class MsgSpec {
      * stored as a subpart of some other mail-item, specifically for Messages stored as part of Appointments
      */
     @XmlAttribute(name=MailConstants.A_ID /* id */, required=true)
+    @GraphQLNonNull
+    @GraphQLQuery(name="id", description="The message id.")
     private final String id;
 
     /**
@@ -166,21 +174,45 @@ public class MsgSpec {
         this.id = id;
     }
 
+    @GraphQLInputField(name="messagePart", description="Set the part or message or rfc822 part.")
     public void setPart(String part) { this.part = part; }
+
+    @GraphQLInputField(name="useRawMessage", description="Set to return the raw message content rather than a parsed mime structure.")
     public void setRaw(Boolean raw) { this.raw = ZmBoolean.fromBool(raw); }
+
+    @GraphQLInputField(name="markMessageAsRead", description="Set to true to mark the message as read.")
     public void setMarkRead(Boolean markRead) { this.markRead = ZmBoolean.fromBool(markRead); }
+
+    @GraphQLInputField(name="inlinedTextLength", description="Set the length of the text inlined into body.")
     public void setMaxInlinedLength(Integer maxInlinedLength) {
         this.maxInlinedLength = maxInlinedLength;
     }
+
+    @GraphQLInputField(name="useUrlContent", description="Set the content to raw or url method.")
     public void setUseContentUrl(Boolean useUrl) { this.useContentUrl = ZmBoolean.fromBool(useUrl); }
+
+    @GraphQLInputField(name="useHtmlContent", description="Set to return defanged html content.")
     public void setWantHtml(Boolean wantHtml) { this.wantHtml = ZmBoolean.fromBool(wantHtml); }
+
+    @GraphQLInputField(name="showImapUid", description="Set to return the IMAP UID.")
     public void setWantImapUid(Boolean wantImapUid) { this.wantImapUid = ZmBoolean.fromBool(wantImapUid); }
+
+    @GraphQLInputField(name="showModifiedSequence", description="Set to return modified sequence.")
     public void setWantModifiedSequence(Boolean wantModSeq) { this.wantModifiedSequence = ZmBoolean.fromBool(wantModSeq); }
-    public boolean getWantModifiedSequence() { return ZmBoolean.toBool(wantModifiedSequence, false); }
+
+    @GraphQLInputField(name="hideImages", description="Set to not display images by default.")
     public void setNeuter(Boolean neuter) { this.neuter = ZmBoolean.fromBool(neuter); }
+
+    @GraphQLInputField(name="recurrenceDateId", description="Set the date-time data to open an instance of a recurring appointment.")
     public void setRecurIdZ(String recurIdZ) { this.recurIdZ = recurIdZ; }
+
+    @GraphQLInputField(name="contentType", description="Set the message content type.")
     public void setWantContent(MsgContent msgContent) { this.wantContent = msgContent; }
+
+    @GraphQLInputField(name="showGroupInfo", description="Set to return group info in the response ")
     public void setNeedCanExpand(Boolean needCanExpand) { this.needCanExpand = ZmBoolean.fromBool(needCanExpand); }
+   
+    @GraphQLInputField(name="headers", description="Set the headers to add.")
     public void setHeaders(Iterable <AttributeName> headers) {
         this.headers.clear();
         if (headers != null) {
@@ -192,18 +224,47 @@ public class MsgSpec {
         this.headers.add(header);
     }
 
+    @GraphQLNonNull
+    @GraphQLQuery(name="id", description="The message id.")
     public String getId() { return id; }
+    
+    @GraphQLQuery(name="messagePart", description="The message or rfc822 part.")
     public String getPart() { return part; }
+    
+    @GraphQLQuery(name="useRawMessage", description="The boolean value to return either raw message content or a parsed mime structure.")
     public Boolean getRaw() { return ZmBoolean.toBool(raw); }
+
+    @GraphQLQuery(name="markMessageAsRead", description="The mark the message as read state.")
     public Boolean getMarkRead() { return ZmBoolean.toBool(markRead); }
+
+    @GraphQLQuery(name="inlinedTextLength", description="The length of the text inlined into body.")
     public Integer getMaxInlinedLength() { return maxInlinedLength; }
+
+    @GraphQLQuery(name="useUrlContent", description="The url or raw content state.")
     public Boolean getUseContentUrl() { return ZmBoolean.toBool(useContentUrl); }
+
+    @GraphQLQuery(name="useHtmlContent", description="The display defanged html content state.")
     public Boolean getWantHtml() { return ZmBoolean.toBool(wantHtml); }
-    public boolean getWantImapUid() { return ZmBoolean.toBool(wantImapUid, false); }
+
+    @GraphQLQuery(name="showImapUid", description="The display IMAP UID state.")
+    public Boolean getWantImapUid() { return ZmBoolean.toBool(wantImapUid, false); }
+
+    @GraphQLQuery(name="showModifiedSequence", description="The modified sequence.")
+    public Boolean getWantModifiedSequence() { return ZmBoolean.toBool(wantModifiedSequence, false); }
+
+    @GraphQLQuery(name="hideImages", description="The default state of dispalying images.")
     public Boolean getNeuter() { return ZmBoolean.toBool(neuter); }
+
+    @GraphQLQuery(name="recurrenceDateId", description="The date-time data to open an instance of a recurring appointment.")
     public String getRecurIdZ() { return recurIdZ; }
-    public Boolean getNeedCanExpand() { return ZmBoolean.toBool(needCanExpand); }
+
+    @GraphQLQuery(name="contentType", description="The message content type.")
     public MsgContent getWantContent() { return wantContent; }
+
+    @GraphQLQuery(name="showGroupInfo", description="The return group info state.")
+    public Boolean getNeedCanExpand() { return ZmBoolean.toBool(needCanExpand); }
+ 
+    @GraphQLQuery(name="headers", description="The headers list.")
     public List<AttributeName> getHeaders() {
         return Collections.unmodifiableList(headers);
     }
